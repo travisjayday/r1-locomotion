@@ -1,0 +1,78 @@
+*/babel/*.json
+.idea
+.vscode
+*__pycache__*
+*.egg-info
+# Build artefacts and downloaded wheels. `python -m build` writes here, and a
+# stray `pip download` in the working tree is otherwise one `git add -A` away
+# from committing an 11 MB binary that no history rewrite gets back out.
+*.whl
+dist/
+outputs/*
+output/*
+rendered_images/*
+*tmp*
+results/*
+exps/*
+.DS_Store
+**/.DS_Store
+wandb/*
+newton_source/*
+data/amass/*.pkl
+.claude/*
+!.claude/commands/
+.cursor/
+renders/
+.envrc
+CLAUDE.local.md
+# safety-probe traces (multi-GB npz)
+.cache/
+
+# Newton/IsaacLab viewer window state; churns on every run
+imgui.ini
+
+# ---- Retargeted motion datasets ----
+# Every one of these is regenerable from the Kimodo source dataset
+# (/home/tjz/secure/RL/next/Kimodo_Locomotion_Dataset) via
+# pyroki/batch_retarget_g1_npz_to_r1.py, so they are outputs, not sources.
+# They were together 450 MB of LFS that every clone -- including a cloud
+# training box that only ever loads one .pt -- would otherwise pay for.
+data/r1_locomotion/
+data/r1_locomotion2/
+data/g1_regen/
+data/walk_random_regen/
+data/walk_random_scale1/
+data/swing_scale_check/
+data/_removed_orphans_20260909/
+
+# r1_locomotion3 is the live dataset. Keep only the mirrored lib that
+# train_agent.py actually loads; the four intermediate retargeting stages
+# (g1 input -> retargeted -> proto -> mirrored) and the unmirrored lib are
+# reproducible byproducts worth 134 MB.
+data/r1_locomotion3/*
+!data/r1_locomotion3/r1_locomotion3_lib_mirrored.pt
+
+# Upstream sample motion libraries for the AMASS/BONES trackers. Referenced
+# only from docs/, never by the R1 pipeline.
+data/motion_for_trackers/
+
+# ---- Upstream assets not used by the R1 pipeline ----
+# The NVlabs checkpoint zoo: 4.85 GB, referenced only from docs/. The R1
+# omniscient teacher trains from scratch (checkpoint: null), so a cloud
+# training box would download five gigabytes it never opens. Re-fetch from
+# github.com/NVlabs/ProtoMotions if a warm start is ever wanted.
+data/pretrained_models/
+
+# README demo GIFs (130 MB). Untracked deliberately: images in README.md and
+# the built docs will not render on GitHub. That is the accepted cost of
+# keeping clones cheap; PNG and SVG stay tracked, matching .gitattributes,
+# which keeps PNG out of LFS because two of them are runtime textures.
+data/static/
+docs/source/_static/*.gif
+docs/source/_static/*.mp4
+
+# Upstream tutorial scenes and sample motions (81 MB). NOTE: this makes
+# examples/tutorial/5_motion_manager.py and 7_deepmimic.py fail from a fresh
+# clone -- they load armchair.usda, the teapot-pour set and the vaulting rig
+# from here. Restore this directory from upstream to run those tutorials.
+examples/data/
